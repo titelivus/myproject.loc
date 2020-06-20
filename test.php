@@ -1,64 +1,101 @@
 <?php
 
-
-/*
-Домашнее задание:
-
-1. Дополните метод sayHello(), чтобы котики после того, как назвали своё имя, говорили о том, какого они цвета.
-
-2. Сделайте свойство color приватным и добавьте в конструктор ещё один аргумент, через который при создании котика
-   будет задаваться его цвет.
-
-3. Сделайте геттер, который будет позволять получить свойство color.
-
-4. Подумайте, стоит ли давать возможность менять котикам цвета после их создания?
-   Если вам хватило совести сказать да - добавьте ещё и сеттер для этого свойства.
-   Это вам в наказание - хорошие люди котов не перекрашивают.
-
-5. Создайте теперь белого Снежка и рыжего Барсика и попросите их рассказать о себе.
+/* Домашнее задание:
+ *
+ * 1. Создайте ещё один класс, являющийся наследником класса Lesson - PaidLesson (платный урок).
+ *
+ * 2. Объявите в нем свойство price (цена), а также геттеры и сеттеры для этого свойства.
+ *    Добавьте в конструкторе параметр, через который это свойство будет устанавливаться при создании объекта.
+ *
+ * 3. Создайте объект этого класса со следующими свойствами:
+ *          заголовок: Урок о наследовании в PHP
+ *          текст: Лол, кек, чебурек
+ *          домашка: Ложитесь спать, утро вечера мудренее
+ *          цена: 99.90
+ *
+ * 4. Выведите этот объект с помощью var_dump()
  */
 
-
-class Cat
+class Post
 {
-    private $name;
-    private $color;
+    private $title;
+    private $text;
 
-    public function __construct(string $name, string $color)
+    public function __construct(string $title, string $text)
     {
-        $this->name = $name;
-        $this->color = $color;
+        $this->title = $title;
+        $this->text = $text;
     }
 
-    public function sayHello()
+    public function getTitle()
     {
-        echo 'Привет! Меня зовут ' . $this->name . '. ' . 'Мой цвет: ' . $this->color . '.';
+        return $this->title;
     }
 
-    public function setName(string $name)
+    public function setTitle(string $title)
     {
-        $this->name = $name;
+        $this->title = $title;
     }
 
-//    public function setColor(string $color)
-//    {
-//        $this->color = $color;
-//    }
-
-    public function getName(): string
+    public function getText()
     {
-        return $this->name;
+        return $this->text;
     }
 
-    public function getColor(): string
+    public function setText(string $text)
     {
-        return $this->color;
+        $this->text = $text;
     }
 }
 
-$cat1 = new Cat('Снежок', 'белый');
-$cat2 = new Cat('Барсик', 'рыжий');
+class Lesson extends Post
+{
+    private $homework;
 
-$cat1->sayHello();
-echo '<br>';
-$cat2->sayHello();
+    public function __construct(string $title, string $text, string $homework)
+    {
+        parent::__construct($title, $text);
+        $this->homework = $homework;
+
+    }
+
+    public function getHomework()
+    {
+        return $this->homework;
+    }
+
+    public function setHomework(string $homework)
+    {
+        $this->homework = $homework;
+    }
+}
+
+class PaidLesson extends Lesson
+{
+    private $price;
+
+    public function __construct(string $title, string $text, string $homework, float $price)
+    {
+        parent::__construct($title, $text, $homework);
+        $this->price = $price;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function setPrice(float $price)
+    {
+        $this->price = $price;
+    }
+}
+
+$lesson1 = new PaidLesson(
+    'Урок о наследовании в PHP',
+    'Лол, кек, чебурек',
+    'Ложитесь спать, утро вечера мудренее',
+    99.90
+);
+
+var_dump($lesson1);
