@@ -1,22 +1,49 @@
 <?php
 
-class Human
+class User
 {
-    private static $count = 0;
+    private $name;
 
-    public function __construct()
+    public function __construct(string $name)
     {
-        self::$count++;
+        $this->name = $name;
     }
 
-    public static function getCount(): int
+    public function getName(): string
     {
-        return self::$count;
+        return $this->name;
     }
 }
 
-for ($i = rand(3, 15); $i != 0; $i--) {
-    new Human();
+class Article
+{
+    private $title;
+    private $text;
+    private $author;
+
+    public function __construct(string $title, string $text, User $author)
+    {
+        $this->title = $title;
+        $this->text = $text;
+        $this->author = $author;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
 }
 
-echo Human::getCount();
+$author = new User('Иван');
+$article = new Article('Заголовок', 'Текст', $author);
+echo $article->getAuthor()->getName();
