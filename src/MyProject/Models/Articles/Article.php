@@ -1,19 +1,8 @@
 <?php
 
-class User
-{
-    private $name;
+namespace MyProject\Models\Articles;
 
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-}
+use MyProject\Models\Users\User;
 
 class Article
 {
@@ -43,7 +32,3 @@ class Article
         return $this->author;
     }
 }
-
-$author = new User('Иван');
-$article = new Article('Заголовок', 'Текст', $author);
-echo $article->getAuthor()->getName();
