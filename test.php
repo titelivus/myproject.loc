@@ -2,100 +2,86 @@
 
 /* Домашнее задание:
  *
- * 1. Создайте ещё один класс, являющийся наследником класса Lesson - PaidLesson (платный урок).
+ * 1. Познакомьтесь самостоятельно с функцией get_class().
  *
- * 2. Объявите в нем свойство price (цена), а также геттеры и сеттеры для этого свойства.
- *    Добавьте в конструкторе параметр, через который это свойство будет устанавливаться при создании объекта.
+ * 2. Дополните информацию об объекте, для которого считается площадь – пишите что это объект такого-то класса.
  *
- * 3. Создайте объект этого класса со следующими свойствами:
- *          заголовок: Урок о наследовании в PHP
- *          текст: Лол, кек, чебурек
- *          домашка: Ложитесь спать, утро вечера мудренее
- *          цена: 99.90
- *
- * 4. Выведите этот объект с помощью var_dump()
+ * 3. Для объектов, которые не реализуют интерфейс CalculateSquare пишите:
+ *    Объект класса ТУТ_НАЗВАНИЕ_КЛАССА не реализует интерфейс CalculateSquare.
  */
 
-class Post
+interface CalculateSquare
 {
-    private $title;
-    private $text;
+    public function calculateSquare(): float;
+}
 
-    public function __construct(string $title, string $text)
+class Rectangle implements CalculateSquare
+{
+    private $x;
+    private $y;
+
+    public function __construct(float $x, float $y)
     {
-        $this->title = $title;
-        $this->text = $text;
+        $this->x = $x;
+        $this->y = $y;
     }
 
-    public function getTitle()
+    public function calculateSquare(): float
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-    }
-
-    public function getText()
-    {
-        return $this->text;
-    }
-
-    public function setText(string $text)
-    {
-        $this->text = $text;
+        return $this->x * $this->y;
     }
 }
 
-class Lesson extends Post
+class Square
 {
-    private $homework;
+    private $x;
 
-    public function __construct(string $title, string $text, string $homework)
+    public function __construct(float $x)
     {
-        parent::__construct($title, $text);
-        $this->homework = $homework;
-
+        $this->x = $x;
     }
 
-    public function getHomework()
+    public function calculateSquare(): float
     {
-        return $this->homework;
-    }
-
-    public function setHomework(string $homework)
-    {
-        $this->homework = $homework;
+        return $this->x ** 2;
     }
 }
 
-class PaidLesson extends Lesson
+class Circle implements CalculateSquare
 {
-    private $price;
+    const PI = 3.1416;
 
-    public function __construct(string $title, string $text, string $homework, float $price)
+    private $r;
+
+    public function __construct(float $r)
     {
-        parent::__construct($title, $text, $homework);
-        $this->price = $price;
+        $this->r = $r;
     }
 
-    public function getPrice()
+    public function calculateSquare(): float
     {
-        return $this->price;
-    }
-
-    public function setPrice(float $price)
-    {
-        $this->price = $price;
+        return self::PI * ($this->r **2);
     }
 }
 
-$lesson1 = new PaidLesson(
-    'Урок о наследовании в PHP',
-    'Лол, кек, чебурек',
-    'Ложитесь спать, утро вечера мудренее',
-    99.90
-);
+$objects = [
+    new Square(5),
+    new Rectangle(2, 4),
+    new Circle(5)
+];
 
-var_dump($lesson1);
+// get_class — Возвращает имя класса, к которому принадлежит объект
+// get_class ([ object $object ] ) : string
+
+foreach($objects as $object) {
+
+    echo 'Объект класса "' . get_class($object) . '" ';
+
+    if ($object instanceof CalculateSquare) {
+        echo 'реализует интерфейс CalculateSquare. Площадь: ' . $object->calculateSquare();
+    } else {
+        echo 'не реализует интерфейс CalculateSquare.';
+    }
+
+    echo '<br>';
+}
