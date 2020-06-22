@@ -4,6 +4,7 @@ namespace MyProject\Controllers;
 
 use MyProject\View\View;
 use MyProject\Services\Db;
+use MyProject\Models\Articles\Article;
 
 class MainController
 {
@@ -21,17 +22,7 @@ class MainController
 
     public function main()
     {
-        $articles = $this->db->query('SELECT * FROM articles');
+        $articles = $this->db->query('SELECT * FROM articles', [], Article::class);
         $this->view->renderHtml('main/main.php', ['articles' => $articles]);
-    }
-
-    public function sayHello(string $name)
-    {
-        echo 'Привет ' . $name;
-    }
-
-    public function sayBye(string $name)
-    {
-        echo 'Пока ' . $name;
     }
 }
