@@ -42,4 +42,16 @@ class ArticlesController
         $article->save();
         return;
     }
+
+    public function add(): void
+    {
+        $author = User::getById(1);
+
+        $article = new Article();
+        $article->setAuthor($author);
+        $article->setName('Позавтракал');
+        $article->setText('Встал утром, поставил чайник и попил чаю.');
+
+        $article->save();
+    }
 }

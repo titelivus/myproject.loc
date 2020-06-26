@@ -22,7 +22,7 @@ abstract class ActiveRecordEntity
         $db = Db::getInstance();
         $entities = $db->query(
             'SELECT * FROM `' . static::getTableName() . '` WHERE id=:id',
-            ['id' => $id],
+            [':id' => $id],
             static::class
         );
         return $entities ? $entities[0] : null;
@@ -56,19 +56,42 @@ abstract class ActiveRecordEntity
 
     private function insert(array $mappedProperties): void
     {
-        $mappedProperties = array_filter($mappedProperties);
+        $filteredProperties = array_filter($mappedProperties);
+
+        $columns = [];
+        $paramsNames = [];
         $params2values = [];
-        $index = 1;
-        foreach ($mappedProperties as $value) {
-            $param = ':param' . $index; // :param1
-            $params2values[$param] = $value; // [:param1 => value1]
-            $index++;
+        foreach ($filteredProperties as $columnName => $value) {
+            $columns[] = '`' . $columnName . '`';
+            $paramName = ':' . $columnName;
+            $paramsNames[] = $paramName;
+            $params2values[$paramName] = $value;
         }
-        $columns = implode(', ', array_keys($mappedProperties));
-        $params = implode(', ', array_keys($params2values));
-        $sql = ('INSERT INTO ' . static::getTableName() . ' (' . $columns . ') VALUES (' . $params . ');');
+
+        $columnsViaSemicolon = implode(', ', $columns);
+        $paramsNamesViaSemicolon = implode(', ', $paramsNames);
+
+        $sql = 'INSERT INTO `' .
+            static::getTableName() .
+            '` (' . $columnsViaSemicolon .
+            ') VALUES (' .
+            $paramsNamesViaSemicolon . ')';
+
         $db = Db::getInstance();
         $db->query($sql, $params2values);
+        $this->refresh($db->getLastInsertId());
+    }
+
+    private function refresh(int $id): void
+    {
+        $objFromDb = static::getById($id);
+        $reflector = new \ReflectionObject($objFromDb);
+        $properties = $reflector->getProperties();
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            $property->setAccessible(true);
+            $this->$propertyName = $property->getValue($objFromDb);
+        }
     }
 
     public function save()
