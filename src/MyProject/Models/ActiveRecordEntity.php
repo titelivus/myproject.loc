@@ -104,6 +104,14 @@ abstract class ActiveRecordEntity
         }
     }
 
+    public function delete()
+    {
+        $db = Db::getInstance();
+        $sql = 'DELETE FROM `' . static::getTableName() . '` WHERE id = :id';
+        $db->query($sql, [':id' => $this->id]);
+        $this->id = null;
+    }
+
     private function mapPropertiesToDbFormat(): array
     {
         $reflector = new \ReflectionObject($this);

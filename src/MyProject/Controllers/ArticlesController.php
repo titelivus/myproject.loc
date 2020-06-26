@@ -54,4 +54,17 @@ class ArticlesController
 
         $article->save();
     }
+
+    public function delete(int $id)
+    {
+        $article = Article::getById($id);
+
+        if ($article === null) {
+            echo 'Такой статьи нет!';
+            return;
+        }
+
+        $article->delete();
+        var_dump($article);
+    }
 }
